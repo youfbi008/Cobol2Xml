@@ -23,36 +23,53 @@ public class ToXml {
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
 	public static void main(String[] args) {
-		if (args.length > 2) {
+		if (args.length > 3) {
 			System.out
 					.println("Usage: GetASTAsXML [--free-format] <cobol-input-file> <xml-output-file>");
 			System.exit(BAD_USAGE);
 		}
 
 		SourceFormat format = SourceFormat.FIXED;
-		String inputFilename = "";//CM101M D://hello.CBL
+		String inputFilename = null;
 		String outputFilename = null;
 
-		if (args.length == 2) {
+		if (args.length == 3) {
 			String option = args[0];
 			if (option.equals("--free-format")) {
 				format = SourceFormat.FREE;
 
 			} else {
-				LOGGER.info("Unknown option: " + option);
+				System.out.println("Unknown option: " + option);
 				System.exit(BAD_USAGE);
 			}
 
+			inputFilename = args[1];
+			outputFilename = args[2];
+		} else if (args.length == 2) {
+//			String option = args[0];
+//			if (option.equals("--free-format")) {
+//				format = SourceFormat.FREE;
+//
+//			} else {
+//				LOGGER.info("Unknown option: " + option);
+//				System.exit(BAD_USAGE);
+//			}
+
+			inputFilename = args[0];
 			outputFilename = args[1];
 		} else if(args.length == 1) {
 
 			outputFilename = args[0];
 		}
 
-		final File cobolFile = new File(inputFilename);
-		if (!cobolFile.exists()) {
-			LOGGER.info("Input file does not exist, so it will read data from standard input stream.");
-//			System.exit(FILE_DOES_NOT_EXIST);
+		File cobolFile = null;
+		if(inputFilename != null && inputFilename != "") {
+
+			cobolFile = new File(inputFilename);
+			if (!cobolFile.exists()) {
+				LOGGER.info("Input file does not exist, so it will read data from standard input stream.");
+				System.exit(FILE_DOES_NOT_EXIST);
+			}
 		}
 
 		final CobolParser parser = new CobolParser();
@@ -62,11 +79,14 @@ public class ToXml {
 		ParseResults results = null;
 
 		try {
-			//	results = parser.parse(cobolFile);
-					results = parser.parse(null);
+			results = parser.parse(cobolFile);
 
 		} catch (IOException e) {
-//			LOGGER.info("IOException while reading standard input stream.");
+			if(cobolFile != null) {
+				LOGGER.info("IOException while reading " + cobolFile);
+			} else {
+				LOGGER.info("IOException while reading standard input stream.");
+			}
 			System.exit(IOEXCEPTION);
 		}
 

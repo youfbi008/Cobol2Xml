@@ -91,10 +91,11 @@ public class CobolParser implements ParserConfiguration {
 	private ParseResults parse(File file, FileReader reader) throws IOException {
 		ParseResults results = new ParseResults(file);
 
-		// TODO copybook
-//		final boolean isCopybook = file.getName().toUpperCase()
-//				.endsWith(".CPY");
-
+		boolean isCopybook = false;
+		if(file != null) {// TODO copybook
+			isCopybook = file.getName().toUpperCase()
+					.endsWith(".CPY");
+			}
 		// Build the tokenisation stage.
 		Tokenizer tokenizer = getNewTokenizationStage(results, reader);
 
@@ -105,11 +106,11 @@ public class CobolParser implements ParserConfiguration {
 		// Depending on the type of file we ask the grammar for the right
 		// parser.
 		Parser parser = null;
-//		if (isCopybook) {
-//			parser = grammar.copybook();
-//		} else {
+		if (isCopybook) {
+			parser = grammar.copybook();
+		} else {
 			parser = grammar.compilationGroup();
-//		}
+		}
 
 		CommonTreeBuilder builder = null;
 
@@ -307,19 +308,19 @@ public class CobolParser implements ParserConfiguration {
 		// step takes the preceding tokenizer, and extends its abilities.
 		Tokenizer tokenizer;
 
-		String strTest = null;
+		String strIOCheck = null;
 		BufferedReader bufFormStdIn = null;
 		if(reader == null) {
 			try {
 				bufFormStdIn = new BufferedReader(
 						new InputStreamReader(System.in));
-				strTest = bufFormStdIn.readLine();
+				strIOCheck = bufFormStdIn.readLine();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		if(strTest != null && strTest != "") {
+		if(strIOCheck != null && strIOCheck != "") {
 			LOGGER.info("Loading Input Data From Standard Input Stream by Dotnet...");
 			// Split the input into lines.
 			tokenizer = new LineSplittingTokenizer(bufFormStdIn);

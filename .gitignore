@@ -1,6 +1,7 @@
-#Ignore thumbnails created by windows
+﻿#Ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio
+*.class
 *.obj
 *.user
 *.aps
@@ -19,6 +20,7 @@ Thumbs.db
 [Bb]in
 [Dd]ebug*/
 .settings/
+build/
 *.lib
 *.sbr
 obj/

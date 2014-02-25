@@ -209,7 +209,7 @@
 
 
 	<target name="jar">
-		<jar destfile="cobol852xml.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="Cobol2Xml.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="koopa.app.cli.ToXml" />
 				<attribute name="Class-Path" value="." />
