@@ -1,0 +1,54 @@
+#Ignore thumbnails created by windows
+Thumbs.db
+#Ignore files build by Visual Studio
+*.obj
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in
+[Dd]ebug*/
+.settings/
+*.lib
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+*.opensdf
+*.sdf
+ipch/
+target
+
+# Ignore vim files
+*~
+*.swp
+
+# Ignore Resharper files
+*.docstates
+*.dotCover
+
+# Ignore NuGet files
+nuspec/
+packages/
+
+# Ignore generated files for testing
+output
+download
+
+# Ignore MonoDevelop files
+test-results
+*.userprefs
+
+# Ignore ANTLR files
+*.tokens
