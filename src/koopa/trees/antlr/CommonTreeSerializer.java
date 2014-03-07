@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
+
+import koopa.app.cli.ToXml;
 import koopa.tokens.Token;
 import koopa.tokens.Position;
 import koopa.util.ANTLR;
@@ -20,7 +22,7 @@ public class CommonTreeSerializer {
 	private static final boolean INCLUDE_POSITIONING;
 	private static String enterkey = "\r\n";
 	private static String code = "";
-
+	private static boolean blInputFile = false;
 	static {
 		final String property = System.getProperty(
 				"koopa.xml.include_positioning", "false");
@@ -34,10 +36,18 @@ public class CommonTreeSerializer {
 		}
 
 		INCLUDE_POSITIONING = includePositioning;
+
 	}
 
-	public static void serialize(CommonTree tree, File file) throws IOException {
+	public static int getLineNum(int lineNum) {
+		if(!blInputFile) {
+			return lineNum + 1;
+		}
+		return lineNum;
+	}
+	public static void serialize(CommonTree tree, File file, boolean isInputFile) throws IOException {
 		// Read file content to build a string.
+		blInputFile = isInputFile;
 		StringBuffer buf = null;
 		BufferedReader bufFormStdIn = new BufferedReader(
 						new InputStreamReader(System.in));
@@ -108,10 +118,10 @@ public class CommonTreeSerializer {
 			// Get the token data
 			Token koopaToken = ((CommonKoopaToken)tree.token).getKoopaToken();
 
-			writer.append(dent + "<TOKEN startline=\"" + koopaToken.getStart().getLinenumber() +
+			writer.append(dent + "<TOKEN startline=\"" + getLineNum(koopaToken.getStart().getLinenumber()) +
 					"\" startpos=\"" + koopaToken.getStart().getOffsetPositionInLine() +
-					"\" endline=\"" + koopaToken.getEnd().getLinenumber() +
-					"\" endpos=\"" + koopaToken.getEnd().getOffsetPositionInLine() + "\">" +
+					"\" endline=\"" + getLineNum(koopaToken.getEnd().getLinenumber()) +
+					"\" endpos=\"" + (koopaToken.getEnd().getOffsetPositionInLine() + 1) + "\">" +
 						tree.getText() + "</TOKEN>" + enterkey);
 			return;
 		}

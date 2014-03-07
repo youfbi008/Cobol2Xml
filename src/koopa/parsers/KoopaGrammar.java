@@ -89,7 +89,7 @@ public abstract class KoopaGrammar {
 				stream.mark(KoopaMarkers.down(name));
 				boolean accepts = parser.accepts(stream);
 				stream.mark(KoopaMarkers.up(name));
-				LOGGER.info("cobol grammer :" + name );
+		//		LOGGER.info("cobol grammer :" + name );
 
 				scope.pop();
 

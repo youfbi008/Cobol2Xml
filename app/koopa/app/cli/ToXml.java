@@ -24,6 +24,7 @@ public class ToXml {
 
 	private static final int INPUT_IS_INVALID = 1;
 	private static final int INPUT_IS_VALID = 0;
+	private static boolean blInputFile = false;
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
 	public static void main(String[] args) {
@@ -68,7 +69,7 @@ public class ToXml {
 
 		File cobolFile = null;
 		if(inputFilename != null && inputFilename != "") {
-
+			setBlInputFile(true);
 			cobolFile = new File(inputFilename);
 			if (!cobolFile.exists()) {
 				LOGGER.info("Input file does not exist, so it will read data from standard input stream.");
@@ -130,7 +131,7 @@ public class ToXml {
 				}
 			}
 			try {
-				CommonTreeSerializer.serialize(ast, xmlFile);
+				CommonTreeSerializer.serialize(ast, xmlFile, blInputFile);
 
 			} catch (Exception e) {
 				LOGGER.info("IOException while writing " + xmlFile);
@@ -147,5 +148,13 @@ public class ToXml {
 		}
 
 		System.exit(INPUT_IS_VALID);
+	}
+
+	public static boolean isBlInputFile() {
+		return blInputFile;
+	}
+
+	public static void setBlInputFile(boolean blInputFile) {
+		ToXml.blInputFile = blInputFile;
 	}
 }

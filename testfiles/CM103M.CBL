@@ -1,4 +1,4 @@
-      *HEADER,COBOL,CM103M                                                            
+﻿      *HEADER,COBOL,CM103M                                                            
 000100 IDENTIFICATION DIVISION.                                         CM1034.2
 000200 PROGRAM-ID.                                                      CM1034.2
 000300     CM103M.                                                      CM1034.2
@@ -87,7 +87,7 @@
 008600     " FOR OFFICIAL USE ONLY".                                    CM1034.2
 008700     02  FILLER PICTURE X(12) VALUE SPACE.                        CM1034.2
 008800     02  FILLER PICTURE X(58) VALUE                               CM1034.2
-008900     "ON-SITE VALIDATION, NATIONAL INSTITUTE OF STD & TECH.     ".CM1034.2
+008900     "ON-SITE VALIDATION, NATIONAL INSTITUTE OF STD  TECH.     ".CM1034.2
 009000     02  FILLER PICTURE X(13) VALUE SPACE.                        CM1034.2
 009100     02 FILLER PIC X(15) VALUE " COPYRIGHT 1974".                 CM1034.2
 009200 01  CCVS-E-4.                                                    CM1034.2

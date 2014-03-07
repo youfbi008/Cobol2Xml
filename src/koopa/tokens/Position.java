@@ -19,6 +19,10 @@ public final class Position {
 		return linenumber;
 	}
 
+	public int getOffsetLinenumber() {
+		return linenumber + 1;
+	}
+
 	public int getPositionInFile() {
 		return positionInFile;
 	}
