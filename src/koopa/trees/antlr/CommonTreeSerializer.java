@@ -1,14 +1,17 @@
 package koopa.trees.antlr;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
-
+import koopa.tokens.Token;
 import koopa.tokens.Position;
 import koopa.util.ANTLR;
+import koopa.util.Tuple4;
 
 import org.antlr.runtime.tree.CommonTree;
 
@@ -16,6 +19,7 @@ public class CommonTreeSerializer {
 
 	private static final boolean INCLUDE_POSITIONING;
 	private static String enterkey = "\r\n";
+	private static String code = "";
 
 	static {
 		final String property = System.getProperty(
@@ -33,6 +37,17 @@ public class CommonTreeSerializer {
 	}
 
 	public static void serialize(CommonTree tree, File file) throws IOException {
+		// Read file content to build a string.
+		StringBuffer buf = null;
+		BufferedReader bufFormStdIn = new BufferedReader(
+						new InputStreamReader(System.in));
+		buf = new StringBuffer();
+        while (bufFormStdIn.ready()) {
+            buf.append((char) bufFormStdIn.read());
+        }
+        bufFormStdIn.close();
+        code = buf.toString();
+
 		Writer writer = new BufferedWriter(new FileWriter(file));
 		serialize(tree, writer);
 	}
@@ -56,6 +71,32 @@ public class CommonTreeSerializer {
 		writer.close();
 	}
 
+	private static Tuple4<Integer, Integer, Integer, Integer> getTokenPosition(CommonTree tree) {
+//		Token aa =tree.getToken();
+//		Position a  = aa.getStart();
+
+		int startline = tree.getLine();
+		int endline = startline;
+		int startpos = tree.getToken().getCharPositionInLine() - 1;
+		int endpos = startpos + tree.getText().length();
+
+		int lineHeadIndex = 0;
+		int nextLineHeadIndex = 0;
+		int i = 1;
+		for (; i < startline; i++) {
+			lineHeadIndex = code.indexOf('\n', lineHeadIndex) + 1;
+		}
+		nextLineHeadIndex = code.indexOf('\n', lineHeadIndex) + 1;
+		int startLineCharNum = nextLineHeadIndex - lineHeadIndex;
+		// TODO /r need be consider.
+		if(startLineCharNum < (startpos + tree.getText().length())) {
+			endline = startline + 1;
+			endpos = startpos + tree.getText().length() - startLineCharNum + 7;
+		}
+
+		return new Tuple4<Integer, Integer, Integer, Integer>(startline, endline, startpos, endpos);
+	}
+
 	private static void walk(Writer writer, CommonTree tree, String dent,
 			TokenTypes types) throws IOException {
 
@@ -63,10 +104,15 @@ public class CommonTreeSerializer {
 
 		if (types.isLiteral(type) || types.isToken(type)) {
 			// TODO Should escape stuff where necessary.
+		//	Tuple4<Integer, Integer, Integer, Integer> token = getTokenPosition(tree);
+			// Get the token data
+			Token koopaToken = ((CommonKoopaToken)tree.token).getKoopaToken();
 
-		//	writer.append(dent + "<TOKEN startline=\"" + tree.getLine() +"\" startpos=\"" + tree.getCharPositionInLine()
-		//			+ "\" endline=\"" + tree.getLine() + "\" endpos=\"" + tree.getCharPositionInLine() + tree.getText().length()  + "\">" + tree.getText() + "</TOKEN>" + enterkey);
-			writer.append(dent + "<t><![CDATA[" + tree.getText() + "]]></t>" + enterkey);
+			writer.append(dent + "<TOKEN startline=\"" + koopaToken.getStart().getLinenumber() +
+					"\" startpos=\"" + koopaToken.getStart().getOffsetPositionInLine() +
+					"\" endline=\"" + koopaToken.getEnd().getLinenumber() +
+					"\" endpos=\"" + koopaToken.getEnd().getOffsetPositionInLine() + "\">" +
+						tree.getText() + "</TOKEN>" + enterkey);
 			return;
 		}
 

@@ -1,6 +1,9 @@
 package koopa.app.cli;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import koopa.parsers.ParseResults;
@@ -9,8 +12,9 @@ import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokens.Token;
 import koopa.trees.antlr.CommonTreeSerializer;
 import koopa.util.Tuple;
-import org.apache.log4j.Logger;
+
 import org.antlr.runtime.tree.CommonTree;
+import org.apache.log4j.Logger;
 
 public class ToXml {
 
@@ -115,10 +119,20 @@ public class ToXml {
 
 		if(outputFilename != null) {
 			final File xmlFile = new File(outputFilename);
+			if (cobolFile.exists()) {
+
+				 try {
+					BufferedInputStream in = new BufferedInputStream(new FileInputStream(cobolFile));
+					System.setIn(in);
+				} catch (FileNotFoundException e) {
+					// TODO 自動生成された catch ブロック
+					e.printStackTrace();
+				}
+			}
 			try {
 				CommonTreeSerializer.serialize(ast, xmlFile);
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				LOGGER.info("IOException while writing " + xmlFile);
 				System.exit(IOEXCEPTION);
 			}

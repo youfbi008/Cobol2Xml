@@ -27,6 +27,10 @@ public final class Position {
 		return positionInLine;
 	}
 
+	public int getOffsetPositionInLine() {
+		return positionInLine - 1;
+	}
+
 	public Position offsetBy(int offset) {
 		return new Position(positionInFile + offset, linenumber, positionInLine
 				+ offset);
@@ -35,11 +39,11 @@ public final class Position {
 	public String toString() {
 		return linenumber + ":" + positionInLine;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Position)) return false;
-		
+
 		Position other = (Position) obj;
 		return positionInFile == other.positionInFile;
 	}
